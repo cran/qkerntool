@@ -1,17 +1,12 @@
-
-
-## It is a version based on the Matlab implementation by Gavin C. Cawley and Nicola L. C. Talbot, 
-## to carry out modifications to the qKernels and cnd kernels
+#come from version of matlab
 
 setGeneric("qsammon",function(x, ...) standardGeneric("qsammon"))
 
 setMethod("qsammon", signature(x = "matrix"),
           function(x, kernel = "rbfbase", qpar = list(sigma = 0.5, q = 0.9), dims = 2, Initialisation = 'random', MaxHalves = 20, MaxIter = 500, TolFun = 1e-7, na.action = na.omit, ...)
           {
-
             x <- na.action(x)
             x <- as.matrix(x)
-
             ret <- new("qsammon")
             N <- nrow(x)
 
@@ -29,7 +24,7 @@ setMethod("qsammon", signature(x = "matrix"),
             else
               if (is(kernel,"qkernel")) K <- qkernmatrix(kernel, x)
 
-
+            K <- sqrt(K)
             scales <- 0.5/sum(K)
 
             K <- K + diag(1,N,N)
@@ -41,21 +36,25 @@ setMethod("qsammon", signature(x = "matrix"),
             if (Initialisation == 'pca') {
               UUDD <- svd(x)
               ydata <- UUDD$u[,1:dims] %*% diag(UUDD$d)[1:dims,1:dims]
-
             }else{
               ydata <- matrix(rnorm(N*dims,mean = 0,sd = 1),N,dims)
             }
+
             one <- matrix(1,N,dims)
-            d <- Eucdist(ydata,ydata, sEuclidean = TRUE) + diag(N)
+            #d <- Eucdist(ydata,ydata, sEuclidean = TRUE) + diag(N)
+            if(is(kernel,"cndkernel")){
+              ## Compute conditionally negative definite kernel matrix
+              d <- sqrt(cndkernmatrix(kernel,ydata,ydata)) + diag(N)
+            }
+            else
+              if (is(kernel,"qkernel")) d <- sqrt(qkernmatrix(kernel, ydata,ydata)) + diag(N)
 
             dinv <- d
             dinv=1/dinv
             dinv[d == 0] <- 0
 
             delta <- K - d
-
             E <- sum(delta^2 * Dinv)
-
 
             #get on with it
             for (i in 1:MaxIter) {
@@ -82,36 +81,41 @@ setMethod("qsammon", signature(x = "matrix"),
               for (j in 1:MaxHalves) {
                 ydata <- ydata_old + matrix(s,nrow(ydata),ncol(ydata))
 
-                d <- Eucdist(ydata,ydata, sEuclidean = TRUE) + diag(N)
+                #d <- Eucdist(ydata,ydata, sEuclidean = TRUE) + diag(N)
+                if(is(kernel,"cndkernel")){
+                  ## Compute conditionally negative definite kernel matrix
+                  d <- cndkernmatrix(kernel,ydata, ydata)
+                  d[d < 0] <- 0
+                  d <- sqrt(d) + diag(N)
+                }
+                else
+                  if (is(kernel,"qkernel")){
+                    d <- qkernmatrix(kernel, ydata, ydata)
+                    d[d < 0] <- 0
+                    d <- sqrt(d) + diag(N)
+                  }
 
                 dinv <- d
                 dinv=1/dinv
                 dinv[d == 0] <- 0
 
-                #  dinv <- 1/d
                 delta <- K - d
                 E_new <- sum(delta^2 * Dinv)
-
-                #print(sum(is.na(ydata)))
-                #View(Eucdist(ydata,ydata, sEuclidean = TRUE))
-                print(E_new)
-
 
                 if (E_new < E) {
                   break
                 }else{
                   s <- 0.5 * s
-
                 }
               }
               #bomb out if too many halving steps are required
               if (j == MaxHalves) {
-                message( 'Optimisation terminated - TolFun exceeded.')
+                message( 'Warning : MaxHalves exceeded.')
                 break
               }
               # evaluate termination criterion
               if (abs((E - E_new)/E) < TolFun){
-                message('Warning : MaxHalves exceeded')
+                message('Optimisation terminated - TolFun exceeded.')
                 break
               }
               #report progress
@@ -130,13 +134,14 @@ setMethod("qsammon", signature(x = "matrix"),
 
 #---------------------------------------------------------------------------#
 setMethod("qsammon", signature(x = "cndkernmatrix"),
-          function(x, k ,dims = 2, Initialisation = 'random', MaxHalves = 20, MaxIter = 500, TolFun = 1e-7, ...)
+          function(cndkernel, x, k ,dims = 2, Initialisation = 'random', MaxHalves = 20, MaxIter = 500, TolFun = 1e-7, ...)
           {
 
             ret <- new("qsammon")
             N <- nrow(x)
             if(!is(x,"cndkernmatrix")) stop("x must inherit from class 'cndkernmatrix'")
 
+            x <- sqrt(x)
             scales <- 0.5/sum(x)
 
             x <- x + diag(1,N,N)
@@ -149,21 +154,23 @@ setMethod("qsammon", signature(x = "cndkernmatrix"),
               loc <- cmdscale(x,k)
               UUDD <- svd(loc)
               ydata <- UUDD$u[,1:dims] %*% diag(UUDD$d)[1:dims,1:dims]
-
             }else{
               ydata <- matrix(rnorm(N*dims,mean = 0,sd = 1),N,dims)
             }
+
             one <- matrix(1,N,dims)
-            d <- Eucdist(ydata,ydata, sEuclidean = TRUE) + diag(N)
+            #d <- Eucdist(ydata,ydata, sEuclidean = TRUE) + diag(N)
+
+            ## Compute conditionally negative definite kernel matrix
+            d <- sqrt(cndkernmatrix(cndkernel,ydata,ydata)) + diag(N)
+
 
             dinv <- d
             dinv=1/dinv
             dinv[d == 0] <- 0
 
             delta <- x - d
-
             E <- sum(delta^2 * Dinv)
-
 
             #get on with it
             for (i in 1:MaxIter) {
@@ -190,34 +197,32 @@ setMethod("qsammon", signature(x = "cndkernmatrix"),
               for (j in 1:MaxHalves) {
                 ydata <- ydata_old + matrix(s,nrow(ydata),ncol(ydata))
 
-                d <- Eucdist(ydata,ydata, sEuclidean = TRUE) + diag(N)
+                #d <- Eucdist(ydata,ydata, sEuclidean = TRUE) + diag(N)
+                d <- cndkernmatrix(cndkernel,ydata, ydata)
+                d[d < 0] <- 0
+                d <- sqrt(d) + diag(N)
 
                 dinv <- d
                 dinv=1/dinv
                 dinv[d == 0] <- 0
 
-                #  dinv <- 1/d
                 delta <- x - d
                 E_new <- sum(delta^2 * Dinv)
-
-                print(E_new)
-
 
                 if (E_new < E) {
                   break
                 }else{
                   s <- 0.5 * s
-
                 }
               }
               #bomb out if too many halving steps are required
               if (j == MaxHalves) {
-                message( 'Optimisation terminated - TolFun exceeded.')
+                message('Warning : MaxHalves exceeded')
                 break
               }
               # evaluate termination criterion
               if (abs((E - E_new)/E) < TolFun){
-                message('Warning : MaxHalves exceeded')
+                message( 'Optimisation terminated - TolFun exceeded.')
                 break
               }
               #report progress
@@ -237,13 +242,13 @@ setMethod("qsammon", signature(x = "cndkernmatrix"),
 
 #---------------------------------------------------------------------------#
 setMethod("qsammon", signature(x = "qkernmatrix"),
-          function(x, k, dims = 2, Initialisation = 'random', MaxHalves = 20, MaxIter = 500, TolFun = 1e-7, ...)
+          function(qkernel, x, k, dims = 2, Initialisation = 'random', MaxHalves = 20, MaxIter = 500, TolFun = 1e-7, ...)
           {
-
             ret <- new("qsammon")
             N <- nrow(x)
             if(!is(x,"qkernmatrix")) stop("x must inherit from class 'qkernmatrix'")
 
+            x <- sqrt(x)
             scales <- 0.5/sum(x)
 
             x <- x + diag(1,N,N)
@@ -256,21 +261,20 @@ setMethod("qsammon", signature(x = "qkernmatrix"),
               loc <- cmdscale(x,k)
               UUDD <- svd(loc)
               ydata <- UUDD$u[,1:dims] %*% diag(UUDD$d)[1:dims,1:dims]
-
             }else{
               ydata <- matrix(rnorm(N*dims,mean = 0,sd = 1),N,dims)
             }
             one <- matrix(1,N,dims)
-            d <- Eucdist(ydata,ydata, sEuclidean = TRUE) + diag(N)
+            #d <- Eucdist(ydata,ydata, sEuclidean = TRUE) + diag(N)
+
+            d <- sqrt(qkernmatrix(qkernel, ydata,ydata)) + diag(N)
 
             dinv <- d
             dinv=1/dinv
             dinv[d == 0] <- 0
 
             delta <- x - d
-
             E <- sum(delta^2 * Dinv)
-
 
             #get on with it
             for (i in 1:MaxIter) {
@@ -297,7 +301,10 @@ setMethod("qsammon", signature(x = "qkernmatrix"),
               for (j in 1:MaxHalves) {
                 ydata <- ydata_old + matrix(s,nrow(ydata),ncol(ydata))
 
-                d <- Eucdist(ydata,ydata, sEuclidean = TRUE) + diag(N)
+                #d <- Eucdist(ydata,ydata, sEuclidean = TRUE) + diag(N)
+                d <- qkernmatrix(qkernel, ydata, ydata)
+                d[d < 0] <- 0
+                d <- sqrt(d) + diag(N)
 
                 dinv <- d
                 dinv=1/dinv
@@ -307,24 +314,20 @@ setMethod("qsammon", signature(x = "qkernmatrix"),
                 delta <- x - d
                 E_new <- sum(delta^2 * Dinv)
 
-                print(E_new)
-
-
                 if (E_new < E) {
                   break
                 }else{
                   s <- 0.5 * s
-
                 }
               }
               #bomb out if too many halving steps are required
               if (j == MaxHalves) {
-                message( 'Optimisation terminated - TolFun exceeded.')
+                message('Warning : MaxHalves exceeded.')
                 break
               }
               # evaluate termination criterion
               if (abs((E - E_new)/E) < TolFun){
-                message('Warning : MaxHalves exceeded')
+                message( 'Optimisation terminated - TolFun exceeded.')
                 break
               }
               #report progress
@@ -340,14 +343,3 @@ setMethod("qsammon", signature(x = "qkernmatrix"),
             cndkernf(ret) <- "qkernel"
             return(ret)
           })
-
-
-
-
-
-
-
-
-
-
-

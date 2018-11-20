@@ -15,10 +15,10 @@ qsammon is a nonlinear form of Sammon Mapping.}
           dims = 2, Initialisation = 'random', MaxHalves = 20,
           MaxIter = 500, TolFun = 1e-7, na.action = na.omit, ...)
 
-\S4method{qsammon}{cndkernmatrix}(x, k, dims = 2, Initialisation = 'random',
+\S4method{qsammon}{cndkernmatrix}(cndkernel, x, k, dims = 2, Initialisation = 'random',
           MaxHalves = 20,MaxIter = 500, TolFun = 1e-7, ...)
 
-\S4method{qsammon}{qkernmatrix}(x, k, dims = 2, Initialisation = 'random',
+\S4method{qsammon}{qkernmatrix}(qkernel, x, k, dims = 2, Initialisation = 'random',
           MaxHalves = 20, MaxIter = 500, TolFun = 1e-7, ...)
 }
 
@@ -83,6 +83,11 @@ qsammon is a nonlinear form of Sammon Mapping.}
     Hyper-parameters for user defined kernels can be passed through the
     qpar parameter as well.}
 
+  \item{qkernel}{the kernel function to be used to calculate the qkernel
+    matrix.}
+  \item{cndkernel}{the cndkernel function to be used to calculate the CND kernel
+    matrix.}
+
   \item{k}{the dimension of the original data.}
 
   \item{dims}{Number of features to return. (default: 2)}
@@ -126,18 +131,11 @@ data(iris)
 train <- as.matrix(iris[,1:4])
 labeltrain<- as.integer(iris[,5])
 ## S4 method for signature 'matrix'
-kpc2 <- qsammon(train, kernel = "rbfbase", qpar = list(sigma = 0.5, q = 0.9), dims = 2,
-                Initialisation = 'pca', MaxHalves = 50)
+kpc2 <- qsammon(train, kernel = "rbfbase", qpar = list(sigma = 2, q = 0.9), dims = 2,
+                Initialisation = 'pca', TolFun = 1e-5)
+plot(dimRed(kpc2), col = as.integer(labeltrain))
 cndkernf(kpc2)
 
-
-iris_unique <- unique(iris) # Remove duplicates
-iris_matrix <- as.matrix(iris_unique[,1:4])
-set.seed(42) # Set a seed if you want reproducible results
-qsammon_out <- qsammon(iris_matrix, kernel = "laplbase", qpar = list(sigma=1,q=0.9),
-                                   Initialisation = 'pca') # Run qsammon
-# Show the objects in the 2D qsammon representation
-plot(dimRed(qsammon_out),col=iris_unique$Species)
 
 }
 \keyword{cluster}
