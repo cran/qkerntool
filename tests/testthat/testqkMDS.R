@@ -89,6 +89,9 @@ plot(d_low@prj, col = labeltrain, xlab="1st Principal Component",ylab="2nd Princ
 d_low = qkMDS(train, kernel = "studcnd", qpar = list(d = 2),dims=2, k=7,plotResiduals = TRUE)
 plot(d_low@prj, col = labeltrain, xlab="1st Principal Component",ylab="2nd Principal Component")
 
+#norcnd
+d_low = qkMDS(train, kernel = "norcnd", qpar = list(),dims=2, k=7,plotResiduals = TRUE)
+plot(d_low@prj, col = labeltrain, xlab="1st Principal Component",ylab="2nd Principal Component")
 
 
 qkfunc <- rbfbase(sigma=100,q=0.8)
@@ -233,6 +236,11 @@ plot(prj(qim1),col=labeltrain, xlab="1st Principal Component",ylab="2nd Principa
 
 
 cndkfunc <- studcnd(d = 1.5)
+Ktrain2 <- cndkernmatrix(cndkfunc, train)
+qim1 <- qkMDS(Ktrain2,dims=2)
+plot(prj(qim1),col=labeltrain, xlab="1st Principal Component",ylab="2nd Principal Component")
+
+cndkfunc <- norcnd()
 Ktrain2 <- cndkernmatrix(cndkfunc, train)
 qim1 <- qkMDS(Ktrain2,dims=2)
 plot(prj(qim1),col=labeltrain, xlab="1st Principal Component",ylab="2nd Principal Component")

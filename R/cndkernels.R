@@ -370,6 +370,30 @@ studcnd<- function(d = 2) # 0 < d <= 2
 }
 setClass("studkernel",prototype=structure(.Data=function(){},qpar=list()),contains=c("cndkernel"))
 
+
+
+norcnd<- function()
+{
+
+  rval <- function(x,y=NULL)
+  {
+
+    if(!is(x,"vector")) stop("x must be a vector")
+    if(!is(y,"vector")&&!is.null(y)) stop("y must a vector")
+    if (is(x,"vector") && is.null(y)){
+      return(0)
+    }
+    if (is(x,"vector") && is(y,"vector")){
+      if (!length(x)==length(y))
+        stop("number of dimension must be the same on both data points")
+      s = Eucdist(x,y)
+      return(s)
+    }
+  }
+  return(new("norkernel",.Data=rval,qpar=list()))
+}
+setClass("norkernel",prototype=structure(.Data=function(){},qpar=list()),contains=c("cndkernel"))
+
 #-----------------------------------------------------------------#
 
 
@@ -397,8 +421,10 @@ setMethod("show",signature(object="cndkernel"),
                    "logcndkernel"  = cat(paste("Log cnd kernel function.", "\n","Hyperparameter :" ,"sigma = ", qpar(object)$sigma," q = ", qpar(object)$q,"\n")),
                    "caucndkernel"  = cat(paste("Cauchy cnd kernel function.", "\n","Hyperparameter :" ,"d = ", qpar(object)$sigma," q = ", qpar(object)$q,"\n")),
                    "chicndkernel"  = cat(paste("Chi-Square cnd kernel function.", "\n","Hyperparameter :" ,"d = ", qpar(object)$sigma," q = ", qpar(object)$q,"\n")),
-                   "studcndkernel" = cat(paste("Generalized T-Student cnd kernel function.", "\n","Hyperparameters :","degree = ",qpar(object)$degree," scale = ", qpar(object)$scale," offset = ", qpar(object)$offset,"\n"))
-                  )
+                   "studcndkernel" = cat(paste("Generalized T-Student cnd kernel function.", "\n","Hyperparameters :","degree = ",qpar(object)$degree," scale = ", qpar(object)$scale," offset = ", qpar(object)$offset,"\n")),
+                   "norkernel"  = cat(paste("Normal cnd kernel function.", "\n","Hyperparameter :" ,"\n"))
+
+                   )
           })
 
 
@@ -750,4 +776,15 @@ cndkernmatrix.studkernel <- function(cndkernel, x, y = NULL) # 0 < d <= 2
   return(as.cndkernmatrix(res))
 }
 setMethod("cndkernmatrix",signature(cndkernel="studkernel"),cndkernmatrix.studkernel)
+
+
+
+cndkernmatrix.norkernel <- function(cndkernel, x, y = NULL)
+{
+  res <- Eucdist(x,y)
+  return(as.cndkernmatrix(res))
+}
+setMethod("cndkernmatrix",signature(cndkernel="norkernel"),cndkernmatrix.norkernel)
+
+
 

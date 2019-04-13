@@ -14,6 +14,7 @@
 \alias{caucnd}
 \alias{chicnd}
 \alias{studcnd}
+\alias{norcnd}
 
 
 \title{CND Kernel Functions}
@@ -33,7 +34,7 @@
   The Cauchy Kernel \eqn{k(x,y) = 1-1/(1+||x-y||^2/\gamma)}.\cr
   The Chi-Square Kernel \eqn{k(x,y) = \sum{2(x-y)^2/(x+y)}}.\cr
   The Generalized T-Student Kernel \eqn{k(x,y) = 1-1/(1+||x-y||^d)}.\cr
-
+  The normal Kernel \eqn{k(x,y) = ||x-y||^2}.\cr
 }
 \usage{
 nonlcnd(alpha = 1)
@@ -50,6 +51,7 @@ logcnd(d = 2)
 caucnd(gamma = 1)
 chicnd( )
 studcnd(d = 2)
+norcnd()
 }
 
   \arguments{

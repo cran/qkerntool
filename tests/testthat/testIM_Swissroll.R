@@ -8,7 +8,7 @@ swissroll = function (N = 1000)
   y <- height
   z <- tt * sin(tt)
   data = cbind(x, y, z)
-  return(data)
+  return(as.matrix(data))
 }
 
 set.seed(123)
@@ -135,6 +135,11 @@ cndkernf(d_low)
 
 # studcnd(d = 2)
 d_low = qkIsomap(data1, kernel = "studcnd", qpar = list(d = 2),dims=2, k=7,plotResiduals = TRUE)
+plot(prj(d_low), col=labeldata1,xlab="1st Principal Component",ylab="2nd Principal Component")
+cndkernf(d_low)
+
+
+d_low = qkIsomap(data1, kernel = "norcnd", qpar = list(),dims=2, k=7,plotResiduals = TRUE)
 plot(prj(d_low), col=labeldata1,xlab="1st Principal Component",ylab="2nd Principal Component")
 cndkernf(d_low)
 
@@ -301,3 +306,8 @@ qim1 <- qkIsomap(Ktrain1,dims=2, k=7)
 plot(prj(qim1),col=labeldata1, xlab="1st Principal Component",ylab="2nd Principal Component")
 cndkernf(qim1)
 
+#cndkfunc <- norcnd()
+#Ktrain1 <- qkernmatrix(cndkfunc, data1)
+#qim1 <- qkIsomap(Ktrain1,dims=2, k=7)
+#plot(prj(qim1),col=labeldata1, xlab="1st Principal Component",ylab="2nd Principal Component")
+#cndkernf(qim1)

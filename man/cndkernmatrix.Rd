@@ -16,6 +16,8 @@
 \alias{cndkernmatrix,wavkernel-method}
 \alias{cndkernmatrix,polykernel-method}
 \alias{cndkernmatrix,rbfkernel-method}
+\alias{cndkernmatrix,norkernel-method}
+
 \alias{cndkernmatrix.anokernel}
 \alias{cndkernmatrix.caukernel}
 \alias{cndkernmatrix.chikernel}
@@ -30,6 +32,7 @@
 \alias{cndkernmatrix.rbfkernel}
 \alias{cndkernmatrix.studkernel}
 \alias{cndkernmatrix.wavkernel}
+\alias{cndkernmatrix.norkernel}
 
 
 \title{CND Kernel Matrix functions}

@@ -216,6 +216,10 @@ kpc2 <- qsammon(train,kernel = "studcnd", qpar = list(d = 1.8), dims = 2)
 plot(dimRed(kpc2), col = as.integer(labeltrain))
 cndkernf(kpc2)
 
+kpc2 <- qsammon(train,kernel = "norcnd", qpar = list(), dims = 2)
+plot(dimRed(kpc2), col = as.integer(labeltrain))
+cndkernf(kpc2)
+
 
 
 
@@ -344,6 +348,12 @@ kpc4 <- qsammon(cndkernel=cndkfunc, cndKtrain, dims = 2)
 plot(dimRed(kpc4), col = as.integer(labeltrain))
 
 cndkfunc <- studcnd(d = 1.8)
+cndKtrain <- cndkernmatrix(cndkfunc, train)
+kpc4 <- qsammon(cndkernel=cndkfunc, cndKtrain, dims = 2)
+cndkernf(kpc4)
+plot(dimRed(kpc4), col = as.integer(labeltrain))
+
+cndkfunc <- norcnd()
 cndKtrain <- cndkernmatrix(cndkfunc, train)
 kpc4 <- qsammon(cndkernel=cndkfunc, cndKtrain, dims = 2)
 cndkernf(kpc4)

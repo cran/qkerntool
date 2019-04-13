@@ -84,6 +84,9 @@ plot(rotated(kpc1),col=labeltrain,xlab="1st Principal Component",ylab="2nd Princ
 kpc1 <- qkpca(train, kernel = "studcnd", qpar = list(d = 1.5),features = 2)
 plot(rotated(kpc1),col=labeltrain,xlab="1st Principal Component",ylab="2nd Principal Component")
 
+kpc1 <- qkpca(train, kernel = "norcnd", qpar = list(),features = 2)
+plot(rotated(kpc1),col=labeltrain,xlab="1st Principal Component",ylab="2nd Principal Component")
+
 #predict
 predict(kpc1,test)
 
@@ -217,6 +220,11 @@ kpc3 <- qkpca(Ktrain2, features = 2)
 plot(rotated(kpc3),col=labeltrain,xlab="1st Principal Component",ylab="2nd Principal Component")
 
 cndkfunc <- studcnd(d = 1.5)
+Ktrain2 <- cndkernmatrix(cndkfunc, train)
+kpc3 <- qkpca(Ktrain2, features = 2)
+plot(rotated(kpc3),col=labeltrain,xlab="1st Principal Component",ylab="2nd Principal Component")
+
+cndkfunc <- studcnd()
 Ktrain2 <- cndkernmatrix(cndkfunc, train)
 kpc3 <- qkpca(Ktrain2, features = 2)
 plot(rotated(kpc3),col=labeltrain,xlab="1st Principal Component",ylab="2nd Principal Component")

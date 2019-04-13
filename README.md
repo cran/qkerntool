@@ -1,7 +1,7 @@
 #qkerntool
 
-Nonlinear machine learning tool for classification, clustering and dimensionality reduction. It integrates 13 conditional negative definite (CND)  kernel  functions and includes the qKernel and CND kernel version of Density-based spatial clustering of applications with noise (DBSCAN), Spectral Clustering, generalized  discriminant analysis (GDA), Principal component analysis (PCA), Isomap and LLE algorithm, Sammon and tSNE.
+ Nonlinear machine learning tool for classification, clustering and dimensionality reduction. It integrates 12 q-kernel functions and 14 conditional negative definite kernel functions and includes the q-kernel and conditional negative definite kernel version of density-based spatial clustering of applications with noise, spectral clustering, generalized discriminant analysis, principal component analysis, multidimensional scaling, locally linear embedding, Sammon's mapping and t-Distributed stochastic neighbor embedding.
 
 #Examples
-install.packages("qkerntool") 
+install.packages("qkerntool")            
 library(qkerntool)

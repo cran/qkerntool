@@ -80,6 +80,9 @@ ds = qkdbscan(x, kernel = "studcnd", qpar = list(d = 1.233),eps = 0.18, MinPts=7
 plot(ds, x)
 
 
+ds = qkdbscan(x, kernel = "norcnd", qpar = list(),eps = 0.18, MinPts=7,hybrid = FALSE)
+plot(ds, x)
+
 qkfun1 <- rbfbase(sigma = 0.64, q=0.8)
 Ktrain1 <- qkernmatrix(qkfun1, x)
 View(Ktrain1@.Data)
@@ -269,3 +272,9 @@ cndkfunc <- studcnd(d = 1.233)
 Ktrain2 <- cndkernmatrix(cndkfunc, x)
 ds3 <- qkdbscan(Ktrain2,eps = 0.18, MinPts = 7, hybrid = FALSE)
 plot(ds3, x)
+
+cndkfunc <- norcnd()
+Ktrain2 <- cndkernmatrix(cndkfunc, x)
+ds3 <- qkdbscan(Ktrain2,eps = 0.18, MinPts = 7, hybrid = FALSE)
+plot(ds3, x)
+

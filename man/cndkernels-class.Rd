@@ -20,6 +20,7 @@
 \alias{caukernel-class}
 \alias{chikernel-class}
 \alias{studkernel-class}
+\alias{norkernel-class}
 
 
 
@@ -35,13 +36,13 @@ Objects can be created by calls of the form \code{new("nonlkernel")},
 \code{new{"invkernel"}}, \code{new{"wavkernel"}},
 \code{new{"powkernel"}}, \code{new{"logkernel"}},
 \code{new{"caukernel"}}, \code{new{"chikernel"}},
-\code{new{"studkernel"}}
+\code{new{"studkernel"}},\code{new{"norkernel"}}
 
 
 or by calling the \code{nonlcnd},\code{polycnd}, \code{rbfcnd},
 \code{laplcnd}, \code{anocnd}, \code{raticnd}, \code{multcnd},
 \code{invcnd}, \code{wavcnd}, \code{powcnd}, \code{logcnd},
-\code{caucnd}, \code{chicnd}, \code{studcnd} functions etc..
+\code{caucnd}, \code{chicnd}, \code{studcnd}, \code{norcnd}  functions etc..
 }
 
 \section{Slots}{

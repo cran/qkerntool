@@ -134,10 +134,14 @@ cndkernf(d_low)
 
 # chicnd()
 #d_low = qkLLE(data1, kernel = "chicnd", qpar = list(),dims=2, k=9)
-##数据集有负值，该核不可用
 
 # studcnd(d = 2)
 d_low = qkLLE(data1, kernel = "studcnd", qpar = list(d = 2),dims=2, k=9)
+plot(prj(d_low), col=labeldata1,xlab="1st Principal Component",ylab="2nd Principal Component",main="qkLLE")
+cndkernf(d_low)
+
+# norcnd()
+d_low = qkLLE(data1, kernel = "norcnd", qpar = list(),dims=2, k=9)
 plot(prj(d_low), col=labeldata1,xlab="1st Principal Component",ylab="2nd Principal Component",main="qkLLE")
 cndkernf(d_low)
 
@@ -276,6 +280,12 @@ plot(prj(qlle1),col=labeldata1, xlab="1st Principal Component",ylab="2nd Princip
 #plot(prj(qlle1),col=labeldata1, xlab="1st Principal Component",ylab="2nd Principal Component")
 
 cndkfunc <- studcnd(d = 2)
+Ktrain2 <- cndkernmatrix(cndkfunc, data1)
+qlle1 <- qkLLE(Ktrain2,dims=2, k=9)
+plot(prj(qlle1),col=labeldata1, xlab="1st Principal Component",ylab="2nd Principal Component")
+
+
+cndkfunc <- norcnd()
 Ktrain2 <- cndkernmatrix(cndkfunc, data1)
 qlle1 <- qkLLE(Ktrain2,dims=2, k=9)
 plot(prj(qlle1),col=labeldata1, xlab="1st Principal Component",ylab="2nd Principal Component")

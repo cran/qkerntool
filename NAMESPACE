@@ -34,10 +34,11 @@ export(	## kernel functions
        "caucnd",
        "chicnd",
        "studcnd",
+       "norcnd",
        "cndkernmatrix",
        "as.qkernmatrix",
        "as.cndkernmatrix",
-       ## High level functions 
+       ## High level functions
        "qkdbscan",
        "qkgda",
        "qkIsomap",
@@ -48,7 +49,7 @@ export(	## kernel functions
        "qtSNE",
        ## Utility functions
        "Eucdist",
-       "blkdiag",       
+       "blkdiag",
        ## Accessor functions
        "cndkernf",
        "qpar",
@@ -59,24 +60,24 @@ export(	## kernel functions
        ## qkpca
        "rotated",
        "eVal",
-       "pcv",       
+       "pcv",
        ## qkgda
        "prj",
        "eVec",
-       "label",       
+       "label",
        ## qkIsomap
        "dims",
        "connum",
        "Residuals",
       ## qkLLE
       ## qtSNE
-       "dimRed",  
+       "dimRed",
        ## qsammom
       ## qkdbscan
        "clust",
        "eps",
        "MinPts",
-      "isseed" 
+      "isseed"
        ## qkspecc
 )
 
@@ -89,8 +90,8 @@ exportClasses("qkdbscan", "qkgda", "qkIsomap", "qkLLE", "qkpca", "qkspecc", "qsa
               "studqkernel","cndkernel", "nonlkernel", "polykernel",
               "rbfkernel", "laplkernel", "anokernel","ratikernel",
               "multkernel", "invkernel", "wavkernel",
-              "powkernel", "logkernel", "caukernel",  
-           "chikernel", "studkernel",
+              "powkernel", "logkernel", "caukernel",
+           "chikernel", "studkernel","norkernel",
                "qkernmatrix", "cndkernmatrix")
 
 

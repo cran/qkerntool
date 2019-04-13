@@ -187,6 +187,14 @@ plot(ymatrix(qspe)[,2:3],col=y)
 qspe <- qkspecc(x,kernel = "studcnd", qpar = list(d=2), normalize="random-walk",Nocent=3, maxk=20, iterations=1200)
 plot(ymatrix(qspe)[,2:3],col=y)
 
+qspe <- qkspecc(x,kernel = "norcnd", qpar = list(), normalize="none",Nocent=3, maxk=20, iterations=1200)
+plot(ymatrix(qspe)[,2:3],col=y)
+qspe <- qkspecc(x,kernel = "norcnd", qpar = list(), normalize="symmetric",Nocent=3, maxk=20, iterations=1200)
+plot(ymatrix(qspe)[,2:3],col=y)
+qspe <- qkspecc(x,kernel = "norcnd", qpar = list(), normalize="random-walk",Nocent=3, maxk=20, iterations=1200)
+plot(ymatrix(qspe)[,2:3],col=y)
+
+
 #kmeans
 qspec <- qkspeclust(qspe,clustmethod = "kmeans", Nocent=10, iterations=1200)
 plot(x, col = clust(qspec))
@@ -256,6 +264,7 @@ cndkfunc <- logcnd(d = 2)
 cndkfunc <- caucnd(gamma = 10)
 cndkfunc <- chicnd()
 cndkfunc <- studcnd(d = 2)
+cndkfunc<- norcnd()
 
 Ktrain3 <- cndkernmatrix(cndkfunc, x)
 qspe <- qkspecc(Ktrain3,Nocent=10, normalize="none", maxk=20, iterations=1200)

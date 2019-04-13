@@ -42,6 +42,7 @@ kpc2 <- qtSNE(as.matrix(mfeat_pix), kernel = "caucnd", qpar = list(gamma = 1000)
 kpc2 <- qtSNE(as.matrix(mfeat_pix), kernel = "chicnd", qpar = list() , epoch_callback = ecb, perplexity=10)
 kpc2 <- qtSNE(as.matrix(mfeat_pix), kernel = "studcnd", qpar = list(d = 0.16) , epoch_callback = ecb, perplexity=10)
 
+kpc2 <- qtSNE(as.matrix(mfeat_pix), kernel = "norcnd", qpar = list() , epoch_callback = ecb, perplexity=10)
 
 
 plot(dimRed(kpc2),col=trainlabels)
@@ -179,3 +180,7 @@ kpc4 <- qtSNE(cndKtrain,max_iter = 1300,epoch_callback = ecb, perplexity=10)
 plot(dimRed(kpc4),col=trainlabels)
 
 
+cndkfunc <- norcnd()
+cndKtrain <- cndkernmatrix(cndkfunc, as.matrix(mfeat_pix))
+kpc4 <- qtSNE(cndKtrain,max_iter = 1300,epoch_callback = ecb, perplexity=10)
+plot(dimRed(kpc4),col=trainlabels)

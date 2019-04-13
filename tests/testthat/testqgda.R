@@ -87,6 +87,10 @@ plot(kgda1@prj,col=as.integer(trainlabel), xlab="1st Principal Component",ylab="
 kgda1 <- qkgda(train, label=trainlabel, kernel = "studcnd", qpar = list(d = .1),features = 2)
 plot(kgda1@prj,col=as.integer(trainlabel), xlab="1st Principal Component",ylab="2nd Principal Component")
 
+
+kgda1 <- qkgda(train, label=trainlabel, kernel = "norcnd", qpar = list(),features = 2)
+plot(kgda1@prj,col=as.integer(trainlabel), xlab="1st Principal Component",ylab="2nd Principal Component")
+
 predict(kgda1, test)
 
 #qkernel
@@ -215,6 +219,12 @@ kgda2<- qkgda(Ktrain3, label=trainlabel, features = 2)
 plot(kgda2@prj,col = as.integer(trainlabel))
 
 cndkfunc <- chicnd()
+Ktrain3 <- cndkernmatrix(cndkfunc, train)
+kgda2<- qkgda(Ktrain3, label=trainlabel, features = 2)
+plot(kgda2@prj,col = as.integer(trainlabel))
+
+
+cndkfunc <- norcnd()
 Ktrain3 <- cndkernmatrix(cndkfunc, train)
 kgda2<- qkgda(Ktrain3, label=trainlabel, features = 2)
 plot(kgda2@prj,col = as.integer(trainlabel))
